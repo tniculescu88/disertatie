@@ -81,23 +81,41 @@ def transition_matrix(df_gps, df_clustered, eps_rad):
     transitions = np.zeros((number_of_clusters, number_of_clusters))
     last = -1
     transition_list = list()
+    sp_trans_list = list()
 
     for i, point in enumerate(df_gps.itertuples()):
-        index = point_index_in_cluster(point[1], point[2], df_clustered, eps_rad)
-        if index >= 0:
+        # if i == 693:
+        #     import pdb; pdb.set_trace()
+        p_index = point_index_in_cluster(point[1], point[2], df_clustered, eps_rad)
+        if p_index >= 0: 
             if last == -1:
-                last = index
-                transition_list.append(index)
-            elif index != last:
-                transitions[last][index] += 1
-                last = index
-                transition_list.append(index)
+                last = p_index
+                transition_list.append(p_index)
+                sp_trans_list.append([i,-1])
+            elif p_index == last:
+            	sp_trans_list[len(sp_trans_list) - 1][1] = i
+            elif p_index != last:
+                transitions[last][p_index] = transitions[last][p_index] + 1
+                last = p_index
+                transition_list.append(p_index)
+                sp_trans_list.append([i, -1])
+            
 
-    return transitions, transition_list
+    return transitions, transition_list, sp_trans_list
 
-transition_mat, transition_list = transition_matrix(df_gps, df_clustered, radius)
+transition_mat, transition_list, sp_trans_list = transition_matrix(df_gps, df_clustered, radius)
 print('transition matrix: {}'.format(transition_mat))
 print('transition list: {}'.format(transition_list))
+print('sp_trans_list: {}'.format(sp_trans_list))
+
+for i,sList in enumerate(sp_trans_list):
+    if sList[1] == -1:
+        print ('index with problems:{}'.format(i))
+        print ('transitionList[{}] = {}'.format(i-1,transition_list[i-1]))
+        print ('transitionList[{}] = {}'.format(i,transition_list[i]))
+        print ('sp_transitionList[{}] = {}'.format(i-1,sp_trans_list[i-1]))
+        print ('sp_transitionList[{}] = {}'.format(i,sp_trans_list[i]))
+        print ('sp_transitionList[{}] = {}'.format(i+1,sp_trans_list[i+1]))
 
 '''
 print(df_clustered)

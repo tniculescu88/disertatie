@@ -5,7 +5,9 @@ from geopy.distance import great_circle
 from shapely.geometry import MultiPoint
 from datetime import datetime as dt
 from math import radians, cos, sin, asin, sqrt, atan2
+import datetime
 
+cluster_min_time = 5 #minim 5 minute in acelasi cluster
 # load the full location history json file downloaded from google
 df_gps = pd.read_csv('user_location.csv')
 print('There are {:,} rows'.format(len(df_gps)))
@@ -84,38 +86,56 @@ def transition_matrix(df_gps, df_clustered, eps_rad):
     sp_trans_list = list()
 
     for i, point in enumerate(df_gps.itertuples()):
-        # if i == 693:
-        #     import pdb; pdb.set_trace()
         p_index = point_index_in_cluster(point[1], point[2], df_clustered, eps_rad)
         if p_index >= 0: 
             if last == -1:
                 last = p_index
                 transition_list.append(p_index)
-                sp_trans_list.append([i,-1])
+                sp_trans_list.append([i, i])
             elif p_index == last:
             	sp_trans_list[len(sp_trans_list) - 1][1] = i
             elif p_index != last:
                 transitions[last][p_index] = transitions[last][p_index] + 1
                 last = p_index
                 transition_list.append(p_index)
-                sp_trans_list.append([i, -1])
+                sp_trans_list.append([i, i])
             
 
     return transitions, transition_list, sp_trans_list
+
+def time_difference(date_time1, date_time2):
+    d1 = datetime.datetime.strptime(date_time1, '%Y-%m-%d %H:%M:%S')
+    d2 = datetime.datetime.strptime(date_time2, '%Y-%m-%d %H:%M:%S')
+    return (d2 - d1).total_seconds() / 60
 
 transition_mat, transition_list, sp_trans_list = transition_matrix(df_gps, df_clustered, radius)
 print('transition matrix: {}'.format(transition_mat))
 print('transition list: {}'.format(transition_list))
 print('sp_trans_list: {}'.format(sp_trans_list))
 
-for i,sList in enumerate(sp_trans_list):
-    if sList[1] == -1:
-        print ('index with problems:{}'.format(i))
-        print ('transitionList[{}] = {}'.format(i-1,transition_list[i-1]))
-        print ('transitionList[{}] = {}'.format(i,transition_list[i]))
-        print ('sp_transitionList[{}] = {}'.format(i-1,sp_trans_list[i-1]))
-        print ('sp_transitionList[{}] = {}'.format(i,sp_trans_list[i]))
-        print ('sp_transitionList[{}] = {}'.format(i+1,sp_trans_list[i+1]))
+index_with_problems = []
+
+for i, sList in enumerate(sp_trans_list):
+    if time_difference(df_gps.iloc[sList[0]]['time'], df_gps.iloc[sList[1]]['time']) < cluster_min_time:
+        index_with_problems.append(i)
+
+print('index with problems {}'.format(index_with_problems))
+
+for index in sorted(index_with_problems, reverse=True):
+    del transition_list[index]
+    del sp_trans_list[index]
+
+print('now transition list is {}'.format(transition_list))
+print('now special transition list is {}'.format(sp_trans_list))
+
+# for i,sList in enumerate(sp_trans_list):
+#     if sList[1] == -1:
+#         print ('index with problems:{}'.format(i))
+#         print ('transitionList[{}] = {}'.format(i-1,transition_list[i-1]))
+#         print ('transitionList[{}] = {}'.format(i,transition_list[i]))
+#         print ('sp_transitionList[{}] = {}'.format(i-1,sp_trans_list[i-1]))
+#         print ('sp_transitionList[{}] = {}'.format(i,sp_trans_list[i]))
+#         print ('sp_transitionList[{}] = {}'.format(i+1,sp_trans_list[i+1]))
 
 '''
 print(df_clustered)

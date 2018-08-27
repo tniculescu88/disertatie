@@ -1,0 +1,28 @@
+Posibile reguli extrase din istoric pentru un punct de interes (POI) de start si unul destinatie:
+-userul pleaca intr-un interval de timp(medie si varianta)
+	-> daca nu pleaca, nu e bine
+-intr-un anumit punct de interes utilizatorul nu poate sta un interval maxim de timp
+	-> daca se depaseste, nu e bine
+-userul poate sta in afara unui punct de interes un interval maxim de timp
+	-> daca se depaseste, nu e bine
+-
+
+
+lastIndexGoal
+nextIndexGoal
+lastGoalTimeArrival
+lastGoalTimeDeparture
+
+Presupuneri:
+
+-stim care a fost ultimul POI vizitat si 
+-la ce timp a ajuns 
+-la ce timp a plecat(daca a plecat) - daca nu a iesit se verifica conditia ca nu sta prea mult
+
+
+Daca stim ca vrea sa mearga din A in B:
+
+
+
+
+Daca nu stim unde vrea sa mearga:

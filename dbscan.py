@@ -141,13 +141,14 @@ transition_mat = [[{"count":0, "routes":[]} for x in range(number_of_clusters)] 
 for i in range(0, len(transition_list) - 1):
     source = transition_list[i]
     destination = transition_list[i+1]
-    transition_mat[source][destination]["count"] += 1
-    start_index = sp_trans_list[i][1]
-    end_index = sp_trans_list[i+1][0]
-    start_time = df_gps.values[start_index][2]
-    end_time = df_gps.values[end_index][2]
-    route = {"start_index": start_index, "end_index": end_index, "start_time": start_time, "end_time": end_time}
-    transition_mat[source][destination]["routes"].append(route)
+    if(source != destination):
+        transition_mat[source][destination]["count"] += 1
+        start_index = sp_trans_list[i][1]
+        end_index = sp_trans_list[i+1][0]
+        start_time = df_gps.values[start_index][2]
+        end_time = df_gps.values[end_index][2]
+        route = {"start_index": start_index, "end_index": end_index, "start_time": start_time, "end_time": end_time}
+        transition_mat[source][destination]["routes"].append(route)
     
     
     

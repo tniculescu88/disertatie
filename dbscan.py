@@ -2,14 +2,13 @@
 import pandas as pd, numpy as np, matplotlib.pyplot as plt, time
 from sklearn.cluster import DBSCAN
 from geopy.distance import great_circle
-from shapely.geometry import MultiPoint
 from datetime import datetime as dt
 from math import radians, cos, sin, asin, sqrt, atan2
 import datetime
 
 cluster_min_time = 5 #minim 5 minute in acelasi cluster
 # load the full location history json file downloaded from google
-df_gps = pd.read_csv('user_location.csv')
+df_gps = pd.read_csv('user_location2.csv')
 print('There are {:,} rows'.format(len(df_gps)))
 
 # define the number of kilometers in one radian
@@ -28,7 +27,14 @@ def distance(lat1, lon1, lat2, lon2):
     return d
 
 def get_centermost_point(cluster):
-    centroid = (MultiPoint(cluster).centroid.x, MultiPoint(cluster).centroid.y)
+    x = 0
+    y = 0
+    for point in cluster:
+        x += point[0]
+        y += point[1]
+    x = x/len(cluster)
+    y = y/len(cluster)
+    centroid = (x,y)
     centermost_point = min(cluster, key=lambda point: great_circle(point, centroid).m)
     return tuple(centermost_point)
 
@@ -80,7 +86,7 @@ def point_index_in_cluster(lat, lon, df_clustered, eps_rad):
 
 def transition_matrix(df_gps, df_clustered, eps_rad):
     number_of_clusters = len(df_clustered)
-    transitions = np.zeros((number_of_clusters, number_of_clusters))
+    transitions = [[{"count":0} for x in range(number_of_clusters)] for y in range(number_of_clusters)] 
     last = -1
     transition_list = list()
     sp_trans_list = list()
@@ -95,7 +101,7 @@ def transition_matrix(df_gps, df_clustered, eps_rad):
             elif p_index == last:
             	sp_trans_list[len(sp_trans_list) - 1][1] = i
             elif p_index != last:
-                transitions[last][p_index] = transitions[last][p_index] + 1
+                transitions[last][p_index]["count"] = transitions[last][p_index]["count"] + 1
                 last = p_index
                 transition_list.append(p_index)
                 sp_trans_list.append([i, i])
@@ -150,7 +156,7 @@ print('first: {} and second: {}'.format(coords_1, coords_2))
 print('distance is: {}'.format(distance(lat_lon.iloc[0]['lat'], lat_lon.iloc[0]['lon'], all_lat_lon.iloc[0]['lat'], all_lat_lon.iloc[0]['lon'])))
 '''
 # save to csv
-df_clustered.to_csv('user-location-clustered.csv', index=False, encoding='utf-8')
+df_clustered.to_csv('user-location-clustered2.csv', index=False, encoding='utf-8')
 
 # show a map of the worldwide data points
 fig, ax = plt.subplots(figsize=[11, 8])

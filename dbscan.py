@@ -147,7 +147,16 @@ for i in range(0, len(transition_list) - 1):
         end_index = sp_trans_list[i+1][0]
         start_time = df_gps.values[start_index][2]
         end_time = df_gps.values[end_index][2]
-        route = {"start_index": start_index, "end_index": end_index, "start_time": start_time, "end_time": end_time}
+        route_size = end_index - start_index
+        route_duration = time_difference(start_time, end_time)
+        route = {
+            "start_index": start_index, 
+            "end_index": end_index, 
+            "start_time": start_time, 
+            "end_time": end_time, 
+            "route_size": route_size,
+            "route_duration": route_duration
+        }
         transition_mat[source][destination]["routes"].append(route)
     
     

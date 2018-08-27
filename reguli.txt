@@ -8,6 +8,7 @@ Posibile reguli extrase din istoric pentru un punct de interes (POI) de start si
 -deducerea de intervale orare per zi/saptamana
 	-> de ex. merge de la A la B in fiecare zi de luni pana vineri intr-un interval de timp
 	-> merge de la A la B o data pe saptamana, de ex. duminica
+	-> daca nu sunt respectate, nu e bine
 
 
 lastIndexGoal

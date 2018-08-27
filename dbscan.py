@@ -135,6 +135,8 @@ print('now transition list is {}'.format(transition_list))
 print('now special transition list is {}'.format(sp_trans_list))
 
 
+total_route_size = 0
+
 #filtering the transition matrix
 number_of_clusters = len(df_clustered)
 transition_mat = [[{"count":0, "routes":[]} for x in range(number_of_clusters)] for y in range(number_of_clusters)] 
@@ -157,16 +159,26 @@ for i in range(0, len(transition_list) - 1):
             "route_size": route_size,
             "route_duration": route_duration
         }
+        total_route_size += route_size
         transition_mat[source][destination]["routes"].append(route)
     
-    
-    
+   
 
     
     
     
 print('now transition matrix is: {}'.format(transition_mat))
 
+print('total route size: {}'.format(total_route_size))
+
+
+
+total_interest_records = 0
+for point in sp_trans_list:
+    total_interest_records += point[1] - point[0]
+print('total records inside interest clusters: {}'.format(total_interest_records))
+    
+ 
 
 # for i,sList in enumerate(sp_trans_list):
 #     if sList[1] == -1:

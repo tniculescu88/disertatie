@@ -134,6 +134,15 @@ for index in sorted(index_with_problems, reverse=True):
 print('now transition list is {}'.format(transition_list))
 print('now special transition list is {}'.format(sp_trans_list))
 
+
+#filtering the transition matrix
+number_of_clusters = len(df_clustered)
+transition_mat = [[{"count":0} for x in range(number_of_clusters)] for y in range(number_of_clusters)] 
+for i in range(0, len(transition_list) - 1):
+    transition_mat[transition_list[i]][transition_list[i+1]]["count"] += 1
+print('now transition matrix is: {}'.format(transition_mat))
+
+
 # for i,sList in enumerate(sp_trans_list):
 #     if sList[1] == -1:
 #         print ('index with problems:{}'.format(i))

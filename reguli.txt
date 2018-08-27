@@ -1,11 +1,13 @@
 Posibile reguli extrase din istoric pentru un punct de interes (POI) de start si unul destinatie:
--userul pleaca intr-un interval de timp(medie si varianta)
+-userul pleaca intr-un interval de timp(media si varianta)
 	-> daca nu pleaca, nu e bine
--intr-un anumit punct de interes utilizatorul nu poate sta un interval maxim de timp
+-intr-un anumit punct de interes utilizatorul poate sta un interval maxim de timp
 	-> daca se depaseste, nu e bine
--userul poate sta in afara unui punct de interes un interval maxim de timp
+-userul poate fi in tranzitie un interval maxim de timp
 	-> daca se depaseste, nu e bine
--
+-deducerea de intervale orare per zi/saptamana
+	-> de ex. merge de la A la B in fiecare zi de luni pana vineri intr-un interval de timp
+	-> merge de la A la B o data pe saptamana, de ex. duminica
 
 
 lastIndexGoal

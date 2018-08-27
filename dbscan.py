@@ -75,16 +75,16 @@ radius = 0.1
 eps_rad = radius / kms_per_radian
 df_clustered = dbscan_reduce(df_gps, epsilon=eps_rad)
 
-def point_index_in_cluster(lat, lon, df_clustered, eps_rad):
+def point_index_in_cluster(lat, lon, df_clustered):
     index = -1
 
     for i, cluster in enumerate(df_clustered.itertuples()):
-        if distance(lat, lon, cluster[1], cluster[2]) < eps_rad:
+        if distance(lat, lon, cluster[1], cluster[2]) < radius:
             return i
 
     return index
 
-def transition_matrix(df_gps, df_clustered, eps_rad):
+def transition_matrix(df_gps, df_clustered):
     number_of_clusters = len(df_clustered)
     transitions = [[{"count":0} for x in range(number_of_clusters)] for y in range(number_of_clusters)] 
     last = -1
@@ -92,14 +92,14 @@ def transition_matrix(df_gps, df_clustered, eps_rad):
     sp_trans_list = list()
 
     for i, point in enumerate(df_gps.itertuples()):
-        p_index = point_index_in_cluster(point[1], point[2], df_clustered, eps_rad)
+        p_index = point_index_in_cluster(point[1], point[2], df_clustered)
         if p_index >= 0: 
             if last == -1:
                 last = p_index
                 transition_list.append(p_index)
                 sp_trans_list.append([i, i])
             elif p_index == last:
-                sp_trans_list[len(sp_trans_list) - 1][1] = i
+            	sp_trans_list[len(sp_trans_list) - 1][1] = i
             elif p_index != last:
                 transitions[last][p_index]["count"] = transitions[last][p_index]["count"] + 1
                 last = p_index
@@ -114,7 +114,7 @@ def time_difference(date_time1, date_time2):
     d2 = datetime.datetime.strptime(date_time2, '%Y-%m-%d %H:%M:%S')
     return (d2 - d1).total_seconds() / 60
 
-transition_mat, transition_list, sp_trans_list = transition_matrix(df_gps, df_clustered, radius)
+transition_mat, transition_list, sp_trans_list = transition_matrix(df_gps, df_clustered)
 print('transition matrix: {}'.format(transition_mat))
 print('transition list: {}'.format(transition_list))
 print('sp_trans_list: {}'.format(sp_trans_list))
@@ -137,24 +137,9 @@ print('now special transition list is {}'.format(sp_trans_list))
 
 #filtering the transition matrix
 number_of_clusters = len(df_clustered)
-transition_mat = [[{"count":0, "routes":[]} for x in range(number_of_clusters)] for y in range(number_of_clusters)] 
+transition_mat = [[{"count":0} for x in range(number_of_clusters)] for y in range(number_of_clusters)] 
 for i in range(0, len(transition_list) - 1):
-    source = transition_list[i]
-    destination = transition_list[i+1]
-    transition_mat[source][destination]["count"] += 1
-    start_index = sp_trans_list[i][1]
-    end_index = sp_trans_list[i+1][0]
-    start_time = df_gps.values[start_index][2]
-    end_time = df_gps.values[end_index][2]
-    route = {"start_index": start_index, "end_index": end_index, "start_time": start_time, "end_time": end_time}
-    transition_mat[source][destination]["routes"].append(route)
-    
-    
-    
-
-    
-    
-    
+    transition_mat[transition_list[i]][transition_list[i+1]]["count"] += 1
 print('now transition matrix is: {}'.format(transition_mat))
 
 

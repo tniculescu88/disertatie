@@ -40,15 +40,18 @@ print(max_route)
 '''
 
 
-requests = [{"lats":[], "lons":[], "indexes":[], "url":""}]
+requests = []
+
+last_index = 0
 
 for index, row in df_gps.iterrows():
     if(row["zone"] == -1):
-        if(len(requests[-1]["indexes"]) == 100):
+        if(len(requests) == 0 or len(requests[-1]["indexes"]) == 100 or last_index + 1 != index):
             requests.append({"lats":[], "lons":[], "indexes":[], "url":""})
         requests[-1]["indexes"].append(index)
         requests[-1]["lats"].append(df_gps.loc[index, 'lat'])
         requests[-1]["lons"].append(df_gps.loc[index, 'lon'])
+        last_index = index
 
 key = "AIzaSyB9kjlneNrld9gqGJb60ncVDOUuBdYa37s"        
                     
@@ -66,7 +69,7 @@ for item in requests:
     del item['lons']
     
     
-with open('goole_requests.json', 'w') as outfile:
+with open('google_requests.json', 'w') as outfile:
     json.dump(requests, outfile)
          
         

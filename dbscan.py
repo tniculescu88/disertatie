@@ -204,6 +204,19 @@ print('distance is: {}'.format(distance(lat_lon.iloc[0]['lat'], lat_lon.iloc[0][
 # save to csv
 df_clustered.to_csv('user-location-clustered.csv', index=False, encoding='utf-8')
 
+f = open('transition_mat.json','w')
+f.write('{}'.format(transition_mat))
+f.close()
+
+f = open('transition_list.json','w')
+f.write('{}'.format(transition_list))
+f.close()
+
+f = open('sp_trans_list.json','w')
+f.write('{}'.format(sp_trans_list))
+f.close()
+
+
 # show a map of the worldwide data points
 fig, ax = plt.subplots(figsize=[11, 8])
 rs_scatter = ax.scatter(df_clustered['lon'], df_clustered['lat'], c='m', edgecolor='None', alpha=0.3, s=120)

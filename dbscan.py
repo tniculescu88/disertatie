@@ -5,6 +5,7 @@ from geopy.distance import great_circle
 from datetime import datetime as dt
 from math import radians, cos, sin, asin, sqrt, atan2
 import datetime
+import json
 
 cluster_min_time = 5 #minim 5 minute in acelasi cluster
 # load the full location history json file downloaded from google
@@ -204,17 +205,15 @@ print('distance is: {}'.format(distance(lat_lon.iloc[0]['lat'], lat_lon.iloc[0][
 # save to csv
 df_clustered.to_csv('user-location-clustered.csv', index=False, encoding='utf-8')
 
-f = open('transition_mat.json','w')
-f.write('{}'.format(transition_mat))
-f.close()
 
-f = open('transition_list.json','w')
-f.write('{}'.format(transition_list))
-f.close()
-
-f = open('sp_trans_list.json','w')
-f.write('{}'.format(sp_trans_list))
-f.close()
+with open('transition_mat.json', 'w') as outfile:
+    json.dump(transition_mat, outfile)
+    
+with open('transition_list.json', 'w') as outfile:
+    json.dump(transition_list, outfile)
+    
+with open('sp_trans_list.json', 'w') as outfile:
+    json.dump(sp_trans_list, outfile)
 
 
 # show a map of the worldwide data points

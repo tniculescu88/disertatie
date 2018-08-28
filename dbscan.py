@@ -215,6 +215,18 @@ with open('transition_list.json', 'w') as outfile:
 with open('sp_trans_list.json', 'w') as outfile:
     json.dump(sp_trans_list, outfile)
 
+print("adding the zones...")    
+    
+df_gps['zone'] = -1
+    
+for i in range(len(sp_trans_list)):
+    start = sp_trans_list[i][0]
+    end = sp_trans_list[i][1]
+    zone = transition_list[i]
+    for j in range(start, end + 1):
+        df_gps.loc[j,'zone'] = zone
+    
+df_gps.to_csv('user_location_with_zones.csv', index=False) 
 
 # show a map of the worldwide data points
 fig, ax = plt.subplots(figsize=[11, 8])

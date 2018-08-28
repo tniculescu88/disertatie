@@ -6,6 +6,13 @@ from datetime import datetime as dt
 from math import radians, cos, sin, asin, sqrt, atan2
 import datetime
 import json
+import sys
+
+fast = False
+
+if (len(sys.argv) == 2):
+    if(sys.argv[1] == "fast"):
+        fast = True
 
 cluster_min_time = 5 #minim 5 minute in acelasi cluster
 # load the full location history json file downloaded from google
@@ -74,7 +81,11 @@ def dbscan_reduce(df, epsilon, x='lon', y='lat'):
 # first cluster the full gps location history data set coarsely, with epsilon=0.1km in radians
 radius = 0.1
 eps_rad = radius / kms_per_radian
-df_clustered = dbscan_reduce(df_gps, epsilon=eps_rad)
+
+if(fast):
+    df_clustered = pd.read_csv('user-location-clustered.csv')
+else:
+    df_clustered = dbscan_reduce(df_gps, epsilon=eps_rad)
 
 def point_index_in_cluster(lat, lon, df_clustered):
     index = -1
@@ -203,7 +214,8 @@ print('first: {} and second: {}'.format(coords_1, coords_2))
 print('distance is: {}'.format(distance(lat_lon.iloc[0]['lat'], lat_lon.iloc[0]['lon'], all_lat_lon.iloc[0]['lat'], all_lat_lon.iloc[0]['lon'])))
 '''
 # save to csv
-df_clustered.to_csv('user-location-clustered.csv', index=False, encoding='utf-8')
+if(not fast):
+    df_clustered.to_csv('user-location-clustered.csv', index=False, encoding='utf-8')
 
 
 with open('transition_mat.json', 'w') as outfile:
@@ -216,6 +228,7 @@ with open('sp_trans_list.json', 'w') as outfile:
     json.dump(sp_trans_list, outfile)
 
 print("adding the zones...")    
+
     
 df_gps['zone'] = -1
     
@@ -227,6 +240,7 @@ for i in range(len(sp_trans_list)):
         df_gps.loc[j,'zone'] = zone
     
 df_gps.to_csv('user_location_with_zones.csv', index=False) 
+
 
 # show a map of the worldwide data points
 fig, ax = plt.subplots(figsize=[11, 8])

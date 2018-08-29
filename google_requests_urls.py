@@ -63,7 +63,7 @@ for item in requests:
         item["url"] += "{}".format(item["lons"][j])
         if(j < len(item["indexes"])-1):
             item["url"] += "|"
-    item["url"] += "&interpolate=true&key=" + key
+    item["url"] += "&interpolate=false&key=" + key
     
     del item['lats']
     del item['lons']

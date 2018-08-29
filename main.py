@@ -46,6 +46,27 @@ if("end_point" in example):
     if(not found): 
         print("street " + street_name + " not found in the history of routes from {} to {}. Sending a lost alert.".format(start_point, end_point))
         sys.exit(1)
+        
+number_of_clusters = len(df_clustered)
+        
+if(not("end_point" in example)):
+    start_point = example["start_point"]
+    lat = example["lat"]
+    lon = example["lon"]
+    street_name = get_street_name(lat, lon)
+    
+    found = False
+    
+    for i in range(number_of_clusters):
+        routes = transition_mat[start_point][i]["routes"]    
+        for route in routes:
+            for street in route:
+                if(street == street_name):
+                    found = True
+    
+    if(not found): 
+        print("street " + street_name + " not found in the history of routes starting from {}. Sending a lost alert.".format(start_point))
+        sys.exit(1)
      
 
 import pdb; pdb.set_trace()

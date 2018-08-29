@@ -2,6 +2,8 @@ import pandas as pd
 import json
 import sys
 import pdb
+from datetime import datetime as dt
+import datetime
 
 if (len(sys.argv) != 2):
     print("example of usage: python main.py examples/example1.json")
@@ -32,15 +34,31 @@ df_clustered = pd.read_csv('user-location-clustered.csv')
 def get_street_name(lat, lon):
   return "Strada Sibiu"
 
-#import pdb; pdb.set_trace()  
-  
+#import pdb; pdb.set_trace()
+
+outside_cluster = "cluster_left" in example
+
+start_point = example["start_point"]
+lat = example["lat"]
+lon = example["lon"]
+street_name = ""
+
+if(outside_cluster):
+    street_name = get_street_name(lat, lon) 
+    
+def time_difference(date_time1, date_time2):
+    d1 = datetime.datetime.strptime(date_time1, '%Y-%m-%d %H:%M:%S')
+    d2 = datetime.datetime.strptime(date_time2, '%Y-%m-%d %H:%M:%S')
+    return (d2 - d1).total_seconds() / 60
+
+if(not outside_cluster):
+    time_in_cluster = time_difference(example["cluster_entered"], example["time"])
+    print("minutes in cluster: {}".format(time_in_cluster))
+    sys.exit(0)
+    
 if("end_point" in example):
-    start_point = example["start_point"]
     end_point = example["end_point"]
     routes = transition_mat[start_point][end_point]["routes"]
-    lat = example["lat"]
-    lon = example["lon"]
-    street_name = get_street_name(lat, lon)
     found = False
     for route in routes:
         for street in route["streets"]:
@@ -56,11 +74,6 @@ if("end_point" in example):
 number_of_clusters = len(df_clustered)
         
 if(not("end_point" in example)):
-    start_point = example["start_point"]
-    lat = example["lat"]
-    lon = example["lon"]
-    street_name = get_street_name(lat, lon)
-    
     found = False
     
     for i in range(number_of_clusters):

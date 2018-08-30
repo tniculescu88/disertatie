@@ -129,7 +129,25 @@ if(not outside_cluster):
             sys.exit(0)
         else:
             print("This interest point {} has been visited before on a {} and and between {} and {}. This looks ok.".format(start_point, day_names[weekday], hour, hour + 1))
-        
+   
+if("end_point" in example):
+    end_point = example["end_point"]
+    routes = transition_mat[start_point][end_point]["routes"]
+    
+    current_route_duration = time_difference(example["cluster_left"], example["time"])
+    
+    max_route_duration = 0
+    for route in routes:
+        if(route["route_duration"] > max_route_duration):
+            max_route_duration = route["route_duration"]
+            
+    late = max_route_duration < current_route_duration
+    if(not late): 
+        print("Current route duration ({} minutes) is smaller than max route duration ({} minutes) from {} to {} in history. This looks ok.".format(current_route_duration, max_route_duration, start_point, end_point))
+    else:
+        print("Current route duration ({} minutes) is larger than max route duration ({} minutes) from {} to {} in history. Sending a lost alert.".format(current_route_duration, max_route_duration, start_point, end_point))
+        sys.exit(0)
+       
     
 if("end_point" in example):
     end_point = example["end_point"]

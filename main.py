@@ -57,9 +57,9 @@ def get_street_name_offline(lat, lon):
     
 def get_street_name_online(lat, lon):
     google_url = "https://roads.googleapis.com/v1/snapToRoads?path="
-    google_url += "{}".format(lat)
+    google_url += str(lat)
     google_url += ","
-    google_url += "{}".format(lon)
+    google_url += str(lon)
     google_url += "&interpolate=false&key=" + key
     
     bytes_answer = urllib.request.urlopen(google_url).read()

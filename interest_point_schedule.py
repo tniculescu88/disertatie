@@ -25,7 +25,7 @@ def time_difference(date_time1, date_time2):
     d2 = datetime.datetime.strptime(date_time2, '%Y-%m-%d %H:%M:%S')
     return (d2 - d1).total_seconds() / 60
 
-day_squedule = Matrix = [["never" for x in range(24)] for y in range(7)]     
+day_squedule = [["never" for x in range(24)] for y in range(7)]     
     
 schedule = [day_squedule]*10
 

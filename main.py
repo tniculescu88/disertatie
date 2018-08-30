@@ -4,6 +4,7 @@ import sys
 import pdb
 from datetime import datetime as dt
 import datetime
+import urllib.request
 
 if (len(sys.argv) != 2):
     print("example of usage: python main.py examples/example1.json")
@@ -39,9 +40,50 @@ df_clustered = pd.read_csv('user-location-clustered.csv')
 
 day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
-def get_street_name(lat, lon):
-  return "Strada Sibiu"
+key = "AIzaSyB9kjlneNrld9gqGJb60ncVDOUuBdYa37s" 
 
+json_decode = json.JSONDecoder()
+
+def get_street_name_offline(lat, lon):
+    return "Strada Sibiu"
+  
+def get_street_name_online(lat, lon):
+    google_url = "https://roads.googleapis.com/v1/snapToRoads?path="
+    google_url += "{}".format(lat)
+    google_url += ","
+    google_url += "{}".format(lon)
+    google_url += "&interpolate=false&key=" + key
+    
+    bytes_answer = urllib.request.urlopen(google_url).read()
+    text_answer = bytes_answer.decode("utf8")
+    google_answer = json_decode.decode(text_answer)
+    
+    print("google answered...")
+    
+    snapped_lat = google_answer["snappedPoints"][0]["location"]["latitude"]
+    snapped_lon = google_answer["snappedPoints"][0]["location"]["longitude"]
+    
+    snapped_lat = "{}".format(snapped_lat)
+    snapped_lon = "{}".format(snapped_lon)
+    
+    
+    bytes_data = urllib.request.urlopen("https://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox="+snapped_lat+"%2C"+snapped_lon+"%2C250&mode=retrieveAddresses&maxresults=1&gen=9&app_id=WWBAntTsRvOS0fscgPXJ&app_code=4NuAvXOIiG1gaP_vFTgu5Q").read()
+
+    text_data = bytes_data.decode("utf8")
+    here_answer = json_decode.decode(text_data)
+    
+    print("here answered...")
+    
+    address = here_answer["Response"]["View"][0]["Result"][0]["Location"]["Address"]
+    street = "notReturnedByHere"
+    if ("Street" in address):
+        street = address["Street"]
+    
+    return street
+
+def get_street_name(lat, lon): 
+    return get_street_name_online(lat, lon)
+  
 #import pdb; pdb.set_trace()
 
 outside_cluster = "cluster_left" in example

@@ -33,6 +33,9 @@ with open('max_times.json', 'r') as f:
 with open('schedule.json', 'r') as f:
     schedule = json.load(f)
     
+with open('routes_max_times.json', 'r') as f:
+    routes_max_times = json.load(f)
+    
     
 df_gps = pd.read_csv('user_location_with_snap_points_and_streets.csv')  
 
@@ -88,6 +91,8 @@ def get_street_name_online(lat, lon):
 
 def get_street_name(lat, lon): 
     return get_street_name_online(lat, lon)
+#    return get_street_name_offline(lat, lon)
+        
   
 #import pdb; pdb.set_trace()
 
@@ -132,14 +137,10 @@ if(not outside_cluster):
    
 if("end_point" in example):
     end_point = example["end_point"]
-    routes = transition_mat[start_point][end_point]["routes"]
     
     current_route_duration = time_difference(example["cluster_left"], example["time"])
     
-    max_route_duration = 0
-    for route in routes:
-        if(route["route_duration"] > max_route_duration):
-            max_route_duration = route["route_duration"]
+    max_route_duration = routes_max_times[start_point][end_point]
             
     late = max_route_duration < current_route_duration
     if(not late): 

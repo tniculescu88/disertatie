@@ -158,12 +158,13 @@ if("end_point" in example):
         for street in route["streets"]:
             if(street == street_name):
                 found = True
+                break
     if(not found): 
         print("street " + street_name + " not found in the history of routes from {} to {}. Sending a lost alert.".format(start_point, end_point))
         sys.exit(0)
     else:
         print("street " + street_name + " was found in the history of routes from {} to {}. This looks ok.".format(start_point, end_point))
-        sys.exit(0)
+#        sys.exit(0)
         
 number_of_clusters = len(df_clustered)
         
@@ -176,10 +177,11 @@ if(not("end_point" in example)):
             for street in route:
                 if(street == street_name):
                     found = True
+                    break
     
     if(not found): 
         print("street " + street_name + " not found in the history of routes starting from {}. Sending a lost alert.".format(start_point))
         sys.exit(0)
      
 
-import pdb; pdb.set_trace()
+

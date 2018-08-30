@@ -68,8 +68,8 @@ def get_street_name_online(lat, lon):
     snapped_lat = google_answer["snappedPoints"][0]["location"]["latitude"]
     snapped_lon = google_answer["snappedPoints"][0]["location"]["longitude"]
     
-    snapped_lat = "{}".format(snapped_lat)
-    snapped_lon = "{}".format(snapped_lon)
+    snapped_lat = str(snapped_lat)
+    snapped_lon = str(snapped_lon)
     
     
     bytes_data = urllib.request.urlopen("https://reverse.geocoder.api.here.com/6.2/reversegeocode.json?prox="+snapped_lat+"%2C"+snapped_lon+"%2C250&mode=retrieveAddresses&maxresults=1&gen=9&app_id=WWBAntTsRvOS0fscgPXJ&app_code=4NuAvXOIiG1gaP_vFTgu5Q").read()

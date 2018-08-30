@@ -26,6 +26,10 @@ with open('sp_trans_list.json', 'r') as f:
 with open('interest_points.json', 'r') as f:
     interest_points = json.load(f)
     
+with open('max_times.json', 'r') as f:
+    max_times = json.load(f)
+    
+    
 df_gps = pd.read_csv('user_location_with_snap_points_and_streets.csv')  
 
 df_clustered = pd.read_csv('user-location-clustered.csv')  
@@ -54,7 +58,12 @@ def time_difference(date_time1, date_time2):
 if(not outside_cluster):
     time_in_cluster = time_difference(example["cluster_entered"], example["time"])
     print("minutes in cluster: {}".format(time_in_cluster))
-    sys.exit(0)
+    if(time_in_cluster > max_times[start_point]):
+        print("{} minutes spent in current point {} are more than the history max ({} minutes) for this point. Sending an alert.".format(time_in_cluster, start_point, max_times[start_point]))
+        sys.exit(0)
+    else:
+        print("{} minutes spent in current point {} are less than the history max ({} minutes) for this point. This looks ok.".format(time_in_cluster, start_point, max_times[start_point]))
+    
     
 if("end_point" in example):
     end_point = example["end_point"]
@@ -68,7 +77,7 @@ if("end_point" in example):
         print("street " + street_name + " not found in the history of routes from {} to {}. Sending a lost alert.".format(start_point, end_point))
         sys.exit(0)
     else:
-        print("street " + street_name + " was found in the history of routes from {} to {}. Looking ok.".format(start_point, end_point))
+        print("street " + street_name + " was found in the history of routes from {} to {}. This looks ok.".format(start_point, end_point))
         sys.exit(0)
         
 number_of_clusters = len(df_clustered)

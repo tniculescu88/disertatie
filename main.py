@@ -45,8 +45,13 @@ key = "AIzaSyB9kjlneNrld9gqGJb60ncVDOUuBdYa37s"
 json_decode = json.JSONDecoder()
 
 def get_street_name_offline(lat, lon):
-    return "Strada Sibiu"
-  
+    if(lat == 44.4379451 and lon == 26.0596271):
+       return "Șoseaua Grozăvești"
+    if(lat == 44.4121317 and lon == 26.017119):
+       return "Aleea Valea Salciei"
+    if(lat == 44.4222703 and lon == 26.0352051):
+       return "Drumul Taberei"
+    
 def get_street_name_online(lat, lon):
     google_url = "https://roads.googleapis.com/v1/snapToRoads?path="
     google_url += "{}".format(lat)

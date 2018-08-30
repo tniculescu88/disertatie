@@ -11,8 +11,8 @@ existing file:
 6)here_requests.py - formats and calls the here requests (here_answers.json)
 7)updating_user_location_with_here_answers.py - adds here answers to the csv (user_location_with_snap_points_and_streets.csv)
 8)adding_streets_to_matrix.py - adds the streets names to the matrix (transition_mat_with_streets.json)
-interest_point_schedule.py - compute 24 x 7 x 10 matrix schedule (schedule.json)
-routes_max_times.py - compute the routes max times (routes_max_times.json)
-interest_points_max_times.py - compute the max times of staying in each interest point (max_times.json)
-show_graph.py - plots the collected points and the interest points
-main.py - tests if the user has got lost or confused and sends an alert
+9)interest_point_schedule.py - compute 24 x 7 x 10 matrix schedule (schedule.json)
+10)routes_max_times.py - compute the routes max times (routes_max_times.json)
+11)interest_points_max_times.py - compute the max times of staying in each interest point (max_times.json)
+12)show_graph.py - plots the collected points and the interest points
+13)main.py - tests if the user has got lost or confused and sends an alert

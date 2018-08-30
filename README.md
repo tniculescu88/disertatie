@@ -16,3 +16,12 @@ existing file:
 11)interest_points_max_times.py - compute the max times of staying in each interest point (max_times.json)
 12)show_graph.py - plots the collected points and the interest points
 13)main.py - tests if the user has got lost or confused and sends an alert
+
+
+main.py
+
+- verifying that the historical maximum of staying in a interest point was not surpassed
+- verifying that at the user has been in the current interest point before in history at the same hour and day of the week
+- verifying that the current route didn't surpass the maximum historical duration for the current source and destination
+- verifying that the current street is found in a historical route from the current source to the current destination
+- verifying, in the case when no destination was set, that the current street is found in all historical routes starting at the current source

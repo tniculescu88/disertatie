@@ -29,11 +29,15 @@ with open('interest_points.json', 'r') as f:
 with open('max_times.json', 'r') as f:
     max_times = json.load(f)
     
+with open('schedule.json', 'r') as f:
+    schedule = json.load(f)
+    
     
 df_gps = pd.read_csv('user_location_with_snap_points_and_streets.csv')  
 
 df_clustered = pd.read_csv('user-location-clustered.csv')  
 
+day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
 def get_street_name(lat, lon):
   return "Strada Sibiu"
@@ -63,7 +67,22 @@ if(not outside_cluster):
         sys.exit(0)
     else:
         print("{} minutes spent in current point {} are less than the history max ({} minutes) for this point. This looks ok.".format(time_in_cluster, start_point, max_times[start_point]))
-    
+
+
+if(not outside_cluster):
+    if(schedule[start_point] == "any_time_is_ok"):
+        print("At this interest point {}, the user can be at any time during the day. This looks ok.".format("start_point"))
+    else:
+        current_time = datetime.datetime.strptime(example["time"], '%Y-%m-%d %H:%M:%S')
+        weekday = current_time.weekday()
+        hour = current_time.hour
+        
+        if(schedule[start_point][weekday][hour] == "never"):
+            print("Never before this interest point {} has been visited on a {} and between {} and {}. Sending an alert.".format(start_point, day_names[weekday], hour, hour + 1))
+            sys.exit(0)
+        else:
+            print("This interest point {} has been visited before on a {} and and between {} and {}. This looks ok.".format(start_point, day_names[weekday], hour, hour + 1))
+        
     
 if("end_point" in example):
     end_point = example["end_point"]

@@ -49,8 +49,8 @@ def get_street_name_offline(lat, lon):
        return "Șoseaua Grozăvești"
     if(lat == 44.4121317 and lon == 26.017119):
        return "Aleea Valea Salciei"
-    if(lat == 44.4222703 and lon == 26.0352051):
-       return "Drumul Taberei"
+    if(lat == 44.4162349 and lon == 26.0517954):
+       return "Bulevardul Ghencea"
     
 def get_street_name_online(lat, lon):
     google_url = "https://roads.googleapis.com/v1/snapToRoads?path="

@@ -31,13 +31,15 @@ def point_index_in_cluster(lat, lon, df_clustered):
 
     return index
 	
-df_test = pd.read_csv('./examples/example1.csv')
+df_test = pd.read_csv('./examples/example5.csv')
 df_clustered = pd.read_csv('user-location-clustered.csv')
 kPOI = 2 # afi point of interest
 aList = []
 for i in range(df_test.shape[0]):
 	aList.append(point_index_in_cluster(df_test.iloc[i]['lat'], df_test.iloc[i]['lon'], df_clustered))
 	result = distance(df_test.iloc[i]['lat'], df_test.iloc[i]['lon'], df_clustered.iloc[kPOI]['lat'], df_clustered.iloc[kPOI]['lon'] )
-	
+    # print(result)
+
+print(aList)
 
 	

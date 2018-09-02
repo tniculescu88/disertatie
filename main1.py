@@ -175,19 +175,15 @@ json_decode = json.JSONDecoder()
 
 if len(test_sp_trans_list) >1:
     outside_cluster = test_sp_trans_list[0][1]
+    end_point = test_transition_list[-1]
 else:
     outside_cluster = 0
+    end_point = -1 
     
-
-# start_point = example["start_point"]
 start_point = test_transition_list[0]
-# lat = example["lat"]
-# lon = example["lon"]
-# street_name = ""
 
 if(not outside_cluster):
     time_in_cluster = time_difference(test_sp_trans_list[0][0], test_sp_trans_list[0][1])
-    print("minutes in cluster: {}".format(time_in_cluster))
     if(time_in_cluster > max_times[start_point]):
         print("{} minutes spent in current point {} are more than the history max ({} minutes) for this point. Sending an alert.".format(time_in_cluster, start_point, max_times[start_point]))
         sys.exit(0)
@@ -195,20 +191,21 @@ if(not outside_cluster):
         print("{} minutes spent in current point {} are less than the history max ({} minutes) for this point. This looks ok.".format(time_in_cluster, start_point, max_times[start_point]))
 
 
-# if(not outside_cluster):
-#     if(schedule[start_point] == "any_time_is_ok"):
-#         print("At this interest point {}, the user can be at any time during the day. This looks ok.".format("start_point"))
-#     else:
-#         current_time = datetime.datetime.strptime(example["time"], '%Y-%m-%d %H:%M:%S')
-#         weekday = current_time.weekday()
-#         hour = current_time.hour
+if(outside_cluster):
+    if(schedule[end_point] == "any_time_is_ok"):
+        print("At this interest point {}, the user can be at any time during the day. This looks ok.".format(end_point))
+    else:
+        current_time = datetime.datetime.strptime(test_sp_trans_list[-1][0], '%Y-%m-%d %H:%M:%S')
+        weekday = current_time.weekday()
+        hour = current_time.hour
         
-#         if(schedule[start_point][weekday][hour] == "never"):
-#             print("Never before this interest point {} has been visited on a {} and between {} and {}. Sending an alert.".format(start_point, day_names[weekday], hour, hour + 1))
-#             sys.exit(0)
-#         else:
-#             print("This interest point {} has been visited before on a {} and and between {} and {}. This looks ok.".format(start_point, day_names[weekday], hour, hour + 1))
-   
+        if(schedule[end_point][weekday][hour] == "never"):
+            print("Never before this interest point {} has been visited on a {} and between {} and {}. Sending an alert.".format(end_point, day_names[weekday], hour, hour + 1))
+            sys.exit(0)
+        else:
+            print("This interest point {} has been visited before on a {} and and between {} and {}. This looks ok.".format(end_point, day_names[weekday], hour, hour + 1))
+import pdb; pdb.set_trace()
+
 # if("end_point" in example):
 #     end_point = example["end_point"]
     

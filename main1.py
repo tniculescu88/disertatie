@@ -247,22 +247,26 @@ if(len(test_transition_list)>1):
         print("street " + street_name + " was found in the history of routes from {} to {}. This looks ok.".format(start_point, end_point))
 #        sys.exit(0)
         
-# number_of_clusters = len(df_clustered)
+number_of_clusters = len(df_clustered)
         
-# if(not("end_point" in example)):
-#     found = False
-    
-#     for i in range(number_of_clusters):
-#         routes = transition_mat[start_point][i]["routes"] 
-#         for route in routes:
-#             for street in route:
-#                 if(street == street_name):
-#                     found = True
-#                     break
-    
-#     if(not found): 
-#         print("street " + street_name + " not found in the history of routes starting from {}. Sending a lost alert.".format(start_point))
-#         sys.exit(0)
-     
+if(len(test_transition_list)<2):
+    found = False
+    routes_streets = []
+    for i in range(number_of_clusters):
+        routes = transition_mat[start_point][i]["routes"] 
+        for route in routes:
+            routes_streets += route["streets"]
+    routes_streets = set(routes_streets)
+
+    found = True
+    for elem in street_name:
+        if elem not in routes_streets:
+            found = False
+            breakStreet = elem
+            break
+        
+    if(not found): 
+        print("street " + breakStreet + " not found in the history of routes starting from {}. Sending a lost alert.".format(start_point))
+        sys.exit(0)
 
 

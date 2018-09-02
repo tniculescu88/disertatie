@@ -39,6 +39,8 @@ al 4-lea exemplu e cand se afla intr-un punct de interes, dar sta in el mai mult
 exemplul 5)
 in care e intr-un punct marti la 10:30, si nu a mai fost nicioadata acolo in intervalul 10-11 martea, si dam alert
 
+exemplu 6)
+tranzitia dureaza prea mult (se depaseste maximul istoric pentru rutele cu sursa respectiva)
 
 main.py
 

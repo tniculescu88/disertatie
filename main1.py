@@ -60,7 +60,6 @@ def get_street_name_offline(lat, lon):
        return "Bulevardul Ghencea"
     
 def get_street_name_online(lat, lon):
-    # import pdb; pdb.set_trace()
     google_url = "https://roads.googleapis.com/v1/snapToRoads?path="
     google_url += str(lat)
     google_url += ","
@@ -117,11 +116,8 @@ df_test = pd.read_csv(examplefile)
 with open('transition_mat_with_streets.json', 'r') as f:
     transition_mat = json.load(f)
 # import pdb; pdb.set_trace()
-
 with open('transition_list.json', 'r') as f:
     history_transition_list = json.load(f)
-
-# import pdb; pdb.set_trace()
    
 with open('sp_trans_list.json', 'r') as f:
     history_sp_trans_list = json.load(f)
@@ -172,17 +168,18 @@ key = "AIzaSyB9kjlneNrld9gqGJb60ncVDOUuBdYa37s"
 
 json_decode = json.JSONDecoder()
 
+outside_cluster = test_sp_trans_list[0][1]
+number_of_clusters = len(test_sp_trans_list)
 
-if len(test_sp_trans_list) >1:
-    outside_cluster = test_sp_trans_list[0][1]
+if len(test_sp_trans_list) >1: 
     end_point = test_transition_list[-1]
 else:
-    outside_cluster = 0
-    end_point = -1 
-    
+    # outside_cluster = 0
+    end_point = -1
+     
 start_point = test_transition_list[0]
 
-if(not outside_cluster):
+if(number_of_clusters == 1):
     time_in_cluster = time_difference(test_sp_trans_list[0][0], test_sp_trans_list[0][1])
     if(time_in_cluster > max_times[start_point]):
         print("{} minutes spent in current point {} are more than the history max ({} minutes) for this point. Sending an alert.".format(time_in_cluster, start_point, max_times[start_point]))
@@ -191,7 +188,7 @@ if(not outside_cluster):
         print("{} minutes spent in current point {} are less than the history max ({} minutes) for this point. This looks ok.".format(time_in_cluster, start_point, max_times[start_point]))
 
 
-if(outside_cluster):
+if(number_of_clusters > 1):
     if(schedule[end_point] == "any_time_is_ok"):
         print("At this interest point {}, the user can be at any time during the day. This looks ok.".format(end_point))
     else:
@@ -204,22 +201,18 @@ if(outside_cluster):
             sys.exit(0)
         else:
             print("This interest point {} has been visited before on a {} and and between {} and {}. This looks ok.".format(end_point, day_names[weekday], hour, hour + 1))
-import pdb; pdb.set_trace()
 
-# if("end_point" in example):
-#     end_point = example["end_point"]
+for i in range(df_test.shape[0]):
+    current_route_duration = time_difference(outside_cluster, df_test.iloc[i]['time'])
+    if current_route_duration > 0:  
+        max_route_duration = max(routes_max_times[start_point])          
+        late = max_route_duration < current_route_duration
+        if(not late): 
+            print("Current route duration ({} minutes) is smaller than max route duration ({} minutes) from {} to {} in history. This looks ok.".format(current_route_duration, max_route_duration, start_point, end_point))
+        else:
+            print("Current route duration ({} minutes) is larger than max route duration ({} minutes) from {} to {} in history. Sending a lost alert.".format(current_route_duration, max_route_duration, start_point, end_point))
+            sys.exit(0)
     
-#     current_route_duration = time_difference(example["cluster_left"], example["time"])
-    
-#     max_route_duration = routes_max_times[start_point][end_point]
-            
-#     late = max_route_duration < current_route_duration
-#     if(not late): 
-#         print("Current route duration ({} minutes) is smaller than max route duration ({} minutes) from {} to {} in history. This looks ok.".format(current_route_duration, max_route_duration, start_point, end_point))
-#     else:
-#         print("Current route duration ({} minutes) is larger than max route duration ({} minutes) from {} to {} in history. Sending a lost alert.".format(current_route_duration, max_route_duration, start_point, end_point))
-#         sys.exit(0)
-       
 breakStreet = ""   
 if(len(test_transition_list)>1):
     end_point = test_transition_list[1]
@@ -244,12 +237,12 @@ if(len(test_transition_list)>1):
         print("street " + str(street_name) + " was found in the history of routes from {} to {}. This looks ok.".format(start_point, end_point))
 #        sys.exit(0)
         
-number_of_clusters = len(df_clustered)
+total_number_of_clusters = len(df_clustered)
         
 if(len(test_transition_list)<2):
     found = False
     routes_streets = []
-    for i in range(number_of_clusters):
+    for i in range(total_number_of_clusters):
         routes = transition_mat[start_point][i]["routes"] 
         for route in routes:
             routes_streets += route["streets"]

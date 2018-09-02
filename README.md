@@ -18,6 +18,29 @@ existing file:
 13)main.py - tests if the user has got lost or confused and sends an alert
 
 
+tests
+exemplu 1)
+facem un exemplu asa, in care pur si simplu strada nu se afla in lista din istoric pentru acea sursa si aceea destinatie?
+si dam alert?
+
+exemplu 2)
+am putea sa avem tot asa, un exemplu la care nu e setata destinatia, si atunci se uita in toate listele pentru aceea sursa
+si tot nu gaseste
+si da alert
+
+exemplu 3)
+facem si un exemplu 3 de succes
+in care gaseste strada in lista
+si timpul petrecut pe traseu e mai mic decat timpul maxim din istoric
+eventual mai mic decat timpul maxim
+
+exemplul 4)
+al 4-lea exemplu e cand se afla intr-un punct de interes, dar sta in el mai mult decat in istoric. Dam alert
+
+exemplul 5)
+in care e intr-un punct marti la 10:30, si nu a mai fost nicioadata acolo in intervalul 10-11 martea, si dam alert
+
+
 main.py
 
 - verifying that the historical maximum of staying in a interest point was not surpassed

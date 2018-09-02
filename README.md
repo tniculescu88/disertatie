@@ -32,7 +32,6 @@ exemplu 3)
 facem si un exemplu 3 de succes
 in care gaseste strada in lista
 si timpul petrecut pe traseu e mai mic decat timpul maxim din istoric
-eventual mai mic decat timpul maxim
 
 exemplul 4)
 al 4-lea exemplu e cand se afla intr-un punct de interes, dar sta in el mai mult decat in istoric. Dam alert

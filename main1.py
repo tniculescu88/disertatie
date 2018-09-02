@@ -244,7 +244,7 @@ if(len(test_transition_list)>1):
         print("street " + breakStreet + " not found in the history of routes from {} to {}. Sending a lost alert.".format(start_point, end_point))
         sys.exit(0)
     else:
-        print("street " + street_name + " was found in the history of routes from {} to {}. This looks ok.".format(start_point, end_point))
+        print("street " + str(street_name) + " was found in the history of routes from {} to {}. This looks ok.".format(start_point, end_point))
 #        sys.exit(0)
         
 number_of_clusters = len(df_clustered)
